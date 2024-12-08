@@ -8,6 +8,7 @@ public class TripDetails
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public DateTime CreatedOn { get; set; }
+    public DateTime UpdatedOn { get; set; }
     public int DaysUntilTrip()
     {
         if (DateTime.Now < StartDate)

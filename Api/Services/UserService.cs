@@ -1,4 +1,3 @@
-using System.Data.Common;
 using Api.CustomExceptions;
 using Api.DbContexts;
 using Api.Models;
@@ -12,11 +11,19 @@ public class UserService : IUserService
     {
         _context = context;
     }
-    public async Task<User> AddAsync(User entity)
+    public async Task<User> AddAsync(CreateUserRequest entity)
     {
-        await _context.Users.AddAsync(entity);
+        var user = new User
+        {
+            FirstName = entity.FirstName,
+            LastName = entity.LastName,
+            CreatedOn = DateTime.Now,
+            UpdatedOn = DateTime.Now
+        };
+
+        await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
-        return entity;
+        return user;
     }
 
     public async Task<User> DeleteAsync(int id)
@@ -46,13 +53,14 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<User> UpdateAsync(User entity)
+    public async Task<User> UpdateAsync(UpdateUserRequest entity)
     {
         var existingUser = await _context.Users.FindAsync(entity.Id);
         if (existingUser == null)
         {
             throw new NotFoundException("User not found");
         }
+
         existingUser.FirstName = entity.FirstName;
         existingUser.LastName = entity.LastName;
         existingUser.UpdatedOn = DateTime.Now;

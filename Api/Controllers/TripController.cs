@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Api.Models;
+using Api.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -7,10 +9,16 @@ namespace Api.Controllers;
 [ApiController]
 public class TripController : ControllerBase
 {
+    private readonly ITripPlanningService _tripPlanningService;
+    public TripController(ITripPlanningService tripPlanningService)
+    {
+        _tripPlanningService = tripPlanningService;
+    }
     [HttpGet]
     public async Task<IActionResult> GetTrips()
     {
-        return Ok(new { status = "ok" });
+        var trips = await _tripPlanningService.GetAllAsync();
+        return Ok(trips);
     }
 
         // [HttpGet("{id}")]
@@ -23,17 +31,27 @@ public class TripController : ControllerBase
         // {
         // }
 
-        // [HttpPost]
-        // public async Task<IActionResult> CreateTrip([FromBody] Trip trip)
-        // {
+    [HttpPost]
+    public async Task<IActionResult> CreateTrip(int UserId, [FromBody] CreateTripRequest trip)
+    {
+        var tripDetails = new TripDetails
+        {
+            UserId = UserId,
+            Tripname = trip.Tripname,
+            StartDate = trip.StartDate,
+            EndDate = trip.EndDate,
+            CreatedOn = DateTime.Now,
+            UpdatedOn = DateTime.Now
+        };
+        var createdTrip = await _tripPlanningService.AddAsync(tripDetails);
+        return Ok(createdTrip);
+     }
 
-        // }
-
-        // [HttpPatch]
-        // public async Task<IActionResult> UpdateTrip(int id, Trip trip)
-        // {
-
-        // }
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateTrip(int id, UpdateTripRequest trip)
+    {
+        
+    }
 
         // [HttpDelete]
         // public async Task<IActionResult> DeleteTrip(int id)

@@ -10,7 +10,6 @@ public class TravelPlanningContext : DbContext
     {
     }
 
-
     public DbSet<User> Users { get; set; }
     public DbSet<TripDetails> TripDetails { get; set; }
 
