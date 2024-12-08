@@ -13,6 +13,9 @@ builder.Services.AddDbContext<TravelPlanningContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IUserService, UserService>();
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users/{userId}/trips")]
     [ApiController]
     public class TripController : ControllerBase
     {

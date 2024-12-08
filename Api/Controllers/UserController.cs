@@ -8,34 +8,52 @@ namespace Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(new { status = "ok" });
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            return Ok(new { status = "ok" });
+            var user = await _userService.GetByIdAsync(id);
+            return Ok(user);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
-            return Ok(new { status = "ok" });
+            user.CreatedOn = DateTime.Now;
+            user.UpdatedOn = DateTime.Now;
+            var newUser = await _userService.AddAsync(user);
+            return Ok(newUser);
         }
 
-        [HttpPatch]
+        [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User user)
         {
-            return Ok(new { status = "ok" });
+            if (id != user.Id)
+            {
+                return BadRequest("User ID mismatch");
+            }
+
+            user.UpdatedOn = DateTime.Now;
+            var updatedUser = await _userService.UpdateAsync(user);
+            return Ok(updatedUser);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            return Ok(new { status = "ok" });
+            var deletedUser = await _userService.DeleteAsync(id);
+            return Ok(deletedUser);
         }
     }
 }
