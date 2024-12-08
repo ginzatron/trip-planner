@@ -1,3 +1,5 @@
+namespace Api.Services;
+
 public interface IAsyncRepositoryService<T>
 {
     Task<IEnumerable<T>> GetAllAsync();

@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers
+namespace Api.Controllers;
+
+[Route("api/users/{userId}/trips")]
+[ApiController]
+public class TripController : ControllerBase
 {
-    [Route("api/users/{userId}/trips")]
-    [ApiController]
-    public class TripController : ControllerBase
+    [HttpGet]
+    public async Task<IActionResult> GetTrips()
     {
-        [HttpGet]
-        public async Task<IActionResult> GetTrips()
-        {
-            return Ok(new { status = "ok" });
-        }
+        return Ok(new { status = "ok" });
+    }
 
         // [HttpGet("{id}")]
         // public async Task<IActionResult> GetTrip(int id)
@@ -40,5 +40,5 @@ namespace Api.Controllers
         // {
 
         // }
-    }
 }
+

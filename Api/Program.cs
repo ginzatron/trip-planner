@@ -1,5 +1,6 @@
 using Api.DbContexts;
 using Api.Middleware;
+using Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<TravelPlanningContext>(options =>
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITripPlanningService, TripPlanningService>();
 
 
 var app = builder.Build();

@@ -4,6 +4,7 @@ using Api.DbContexts;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
 
+namespace Api.Services;
 public class UserService : IUserService
 {
     private readonly TravelPlanningContext _context;
