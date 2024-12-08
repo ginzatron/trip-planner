@@ -12,24 +12,28 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
+    
     [HttpGet]
     public async Task<IActionResult> GetUsers()
     {
         var users = await _userService.GetAllAsync();
         return Ok(users);
     }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(int id)
     {
         var user = await _userService.GetByIdAsync(id);
         return Ok(user);
     }
+
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest user)
     {
         var newUser = await _userService.AddAsync(user);
         return Ok(newUser);
     }
+
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest user)
     {
@@ -41,11 +45,12 @@ public class UserController : ControllerBase
         var updatedUser = await _userService.UpdateAsync(user);
         return Ok(updatedUser);
     }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        var deletedUser = await _userService.DeleteAsync(id);
-        return Ok(deletedUser);
+        await _userService.DeleteAsync(id);
+        return NoContent();
     }
 }
 

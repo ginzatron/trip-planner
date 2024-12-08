@@ -14,49 +14,45 @@ public class TripController : ControllerBase
     {
         _tripPlanningService = tripPlanningService;
     }
+
     [HttpGet]
-    public async Task<IActionResult> GetTrips()
+    public async Task<IActionResult> GetTrips(int userId)
     {
-        var trips = await _tripPlanningService.GetAllAsync();
+        var trips = await _tripPlanningService.GetAllAsync(userId);
         return Ok(trips);
     }
 
-        // [HttpGet("{id}")]
-        // public async Task<IActionResult> GetTrip(int id)
-        // {
-        // }
-
-        // [HttpGet("/user/{userId}")]
-        // public async Task<IActionResult> GetTripsByUser(int userId)
-        // {
-        // }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTrip(int id)
+    {
+        var trip = await _tripPlanningService.GetByIdAsync(id);
+        return Ok(trip);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTrip(int UserId, [FromBody] CreateTripRequest trip)
+    public async Task<IActionResult> CreateTrip(int userId, [FromBody] CreateTripRequest trip)
     {
-        var tripDetails = new TripDetails
-        {
-            UserId = UserId,
-            Tripname = trip.Tripname,
-            StartDate = trip.StartDate,
-            EndDate = trip.EndDate,
-            CreatedOn = DateTime.Now,
-            UpdatedOn = DateTime.Now
-        };
-        var createdTrip = await _tripPlanningService.AddAsync(tripDetails);
+        var createdTrip = await _tripPlanningService.AddAsync(userId, trip);
         return Ok(createdTrip);
      }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateTrip(int id, UpdateTripRequest trip)
     {
-        
+        if (id != trip.Id)
+        {
+            return BadRequest("Trip ID mismatch");
+        }
+
+        var updatedTrip = await _tripPlanningService.UpdateAsync(trip);
+        return Ok(updatedTrip);
     }
 
-        // [HttpDelete]
-        // public async Task<IActionResult> DeleteTrip(int id)
-        // {
-
-        // }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTrip(int id)
+    {
+        await _tripPlanningService.DeleteAsync(id);
+        return NoContent();
+    }
 }
 

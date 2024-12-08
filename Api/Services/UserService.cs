@@ -11,32 +11,6 @@ public class UserService : IUserService
     {
         _context = context;
     }
-    public async Task<User> AddAsync(CreateUserRequest entity)
-    {
-        var user = new User
-        {
-            FirstName = entity.FirstName,
-            LastName = entity.LastName,
-            CreatedOn = DateTime.Now,
-            UpdatedOn = DateTime.Now
-        };
-
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
-        return user;
-    }
-
-    public async Task<User> DeleteAsync(int id)
-    {
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
-        {
-            throw new NotFoundException("User not found");
-        }
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
-        return user;
-    }
 
     public async Task<IEnumerable<User>> GetAllAsync()
     {
@@ -50,6 +24,20 @@ public class UserService : IUserService
         {
             throw new NotFoundException("User not found");
         }
+        return user;
+    }
+    public async Task<User> AddAsync(CreateUserRequest entity)
+    {
+        var user = new User
+        {
+            FirstName = entity.FirstName,
+            LastName = entity.LastName,
+            CreatedOn = DateTime.Now,
+            UpdatedOn = DateTime.Now
+        };
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
         return user;
     }
 
@@ -67,5 +55,15 @@ public class UserService : IUserService
 
         await _context.SaveChangesAsync();
         return existingUser;
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user != null)
+        {
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        }
     }
 }

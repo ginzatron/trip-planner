@@ -12,10 +12,25 @@ public class TripPlanningService : ITripPlanningService
     {
         _context = context;
     }
-    public async Task<TripDetails> AddAsync(CreateTripRequest entity)
+    public async Task<IEnumerable<TripDetails>> GetAllAsync(int userId)
+    {
+        return await _context.TripDetails.Where(t => t.UserId == userId).ToListAsync();
+    }
+    public async Task<TripDetails> GetByIdAsync(int id)
+    {
+        var trip = await _context.TripDetails.FindAsync(id);
+        if (trip == null)
+        {
+            throw new NotFoundException("Trip not found");
+        }
+        
+        return trip;
+    }
+    public async Task<TripDetails> AddAsync(int userId, CreateTripRequest entity)
     {
         var trip = new TripDetails
         {
+            UserId = userId,
             Tripname = entity.Tripname,
             StartDate = entity.StartDate,
             EndDate = entity.EndDate,
@@ -27,34 +42,6 @@ public class TripPlanningService : ITripPlanningService
         await _context.SaveChangesAsync();
         return trip;
     }
-
-    public async Task<TripDetails> DeleteAsync(int id)
-    {
-        var trip = await _context.TripDetails.FindAsync(id);
-        if (trip == null)
-        {
-            throw new NotFoundException("Trip not found");
-        }
-        _context.TripDetails.Remove(trip);
-        await _context.SaveChangesAsync();
-        return trip;
-    }
-
-    public async Task<IEnumerable<TripDetails>> GetAllAsync()
-    {
-        return await _context.TripDetails.ToListAsync();
-    }
-
-    public async Task<TripDetails> GetByIdAsync(int id)
-    {
-        var trip = await _context.TripDetails.FindAsync(id);
-        if (trip == null)
-        {
-            throw new NotFoundException("Trip not found");
-        }
-        return trip;
-    }
-
     public async Task<TripDetails> UpdateAsync(UpdateTripRequest entity)
     {
         var existingTrip = await _context.TripDetails.FindAsync(entity.Id);
@@ -71,5 +58,19 @@ public class TripPlanningService : ITripPlanningService
         await _context.SaveChangesAsync();
         return existingTrip;
     }
+
+    public async Task DeleteAsync(int id)
+    {
+        var trip = await _context.TripDetails.FindAsync(id);
+        if (trip != null)
+        {
+            _context.TripDetails.Remove(trip);
+            await _context.SaveChangesAsync();
+        }
+    }
 }
+
+
+
+
 
