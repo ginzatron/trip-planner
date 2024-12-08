@@ -1,6 +1,7 @@
 using Api.DbContexts;
 using Api.Middleware;
 using Api.Services;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpLogging(options => {
+    options.LoggingFields = HttpLoggingFields.All;
+});
+
 
 builder.Services.AddDbContext<TravelPlanningContext>(options =>
 {
@@ -20,6 +25,8 @@ builder.Services.AddScoped<ITripPlanningService, TripPlanningService>();
 
 var app = builder.Build();
 
+app.UseHttpLogging();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<RequestLoggingMiddleware>();  
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.UseRouting();
