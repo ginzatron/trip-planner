@@ -1,6 +1,5 @@
 ﻿using Api.Models;
 using Api.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -16,9 +15,9 @@ public class TripController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTrips(int userId)
+    public async Task<IActionResult> GetTrips(int userId, [FromQuery] TripDesignation? designation = null)
     {
-        var trips = await _tripPlanningService.GetAllAsync(userId);
+        var trips = await _tripPlanningService.GetAllAsync(userId, designation);
         return Ok(trips);
     }
 

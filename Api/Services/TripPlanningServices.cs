@@ -12,9 +12,15 @@ public class TripPlanningService : ITripPlanningService
     {
         _context = context;
     }
-    public async Task<IEnumerable<TripDetails>> GetAllAsync(int userId)
+    public async Task<IEnumerable<TripDetails>> GetAllAsync(int userId, TripDesignation? designation = null)
     {
-        return await _context.TripDetails.Where(t => t.UserId == userId).ToListAsync();
+        var query = _context.TripDetails.Where(t => t.UserId == userId);
+        if (designation != null)
+        {
+            query = query.Where(t => t.TripDesignation == designation);
+        }
+
+        return await query.ToListAsync();
     }
     public async Task<TripDetails> GetByIdAsync(int id)
     {
@@ -23,7 +29,7 @@ public class TripPlanningService : ITripPlanningService
         {
             throw new NotFoundException("Trip not found");
         }
-        
+
         return trip;
     }
     public async Task<TripDetails> AddAsync(int userId, CreateTripRequest entity)
@@ -32,6 +38,7 @@ public class TripPlanningService : ITripPlanningService
         {
             UserId = userId,
             Tripname = entity.Tripname,
+            TripDesignation = entity.TripDesignation,
             StartDate = entity.StartDate,
             EndDate = entity.EndDate,
             CreatedOn = DateTime.Now,
@@ -51,6 +58,7 @@ public class TripPlanningService : ITripPlanningService
         }
 
         existingTrip.Tripname = entity.Tripname;
+        existingTrip.TripDesignation = entity.TripDesignation;
         existingTrip.StartDate = entity.StartDate;
         existingTrip.EndDate = entity.EndDate;
         existingTrip.UpdatedOn = DateTime.Now;
