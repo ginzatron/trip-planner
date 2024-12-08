@@ -37,7 +37,7 @@ public class TripPlanningService : ITripPlanningService
         var trip = new TripDetails
         {
             UserId = userId,
-            Tripname = entity.Tripname,
+            TripName = entity.TripName,
             TripDesignation = entity.TripDesignation,
             StartDate = entity.StartDate,
             EndDate = entity.EndDate,
@@ -57,7 +57,7 @@ public class TripPlanningService : ITripPlanningService
             throw new NotFoundException("Trip not found");
         }
 
-        existingTrip.Tripname = entity.Tripname;
+        existingTrip.TripName = entity.TripName;
         existingTrip.TripDesignation = entity.TripDesignation;
         existingTrip.StartDate = entity.StartDate;
         existingTrip.EndDate = entity.EndDate;

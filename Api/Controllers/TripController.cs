@@ -35,7 +35,7 @@ public class TripController : ControllerBase
         return Ok(createdTrip);
      }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTrip(int id, UpdateTripRequest trip)
     {
         if (id != trip.Id)

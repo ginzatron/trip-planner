@@ -12,7 +12,7 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetUsers()
     {
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         return Ok(newUser);
     }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest user)
     {
         if (id != user.Id)
