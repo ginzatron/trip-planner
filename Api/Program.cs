@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 using Api.DbContexts;
 using Api.Middleware;
 using Api.Services;
+using Api.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +16,8 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
     });
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpLogging(options => {
@@ -28,6 +33,8 @@ builder.Services.AddDbContext<TravelPlanningContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITripPlanningService, TripPlanningService>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTripValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateTripValidator>();
 
 var app = builder.Build();
 
