@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetUser(int id)
     {
         var user = await _userService.GetByIdAsync(id);
-        return Ok(user);
+        return user != null ? Ok(user) : NotFound("User not found");
     }
 
     [HttpPost]
@@ -43,7 +43,7 @@ public class UserController : ControllerBase
         }
 
         var updatedUser = await _userService.UpdateAsync(user);
-        return Ok(updatedUser);
+        return updatedUser != null ? Ok(updatedUser) : NotFound("User not found");
     }
 
     [HttpDelete("{id}")]

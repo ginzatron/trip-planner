@@ -1,4 +1,3 @@
-using Api.CustomExceptions;
 using Api.DbContexts;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +16,9 @@ public class UserService : IUserService
         return await _context.Users.ToListAsync();
     }
 
-    public async Task<User> GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(int id)
     {
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
-        {
-            throw new NotFoundException("User not found");
-        }
-        return user;
+        return await _context.Users.FindAsync(id);
     }
     public async Task<User> AddAsync(CreateUserRequest entity)
     {
@@ -41,12 +35,12 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<User> UpdateAsync(UpdateUserRequest entity)
+    public async Task<User?> UpdateAsync(UpdateUserRequest entity)
     {
         var existingUser = await _context.Users.FindAsync(entity.Id);
         if (existingUser == null)
         {
-            throw new NotFoundException("User not found");
+            return existingUser;
         }
 
         existingUser.FirstName = entity.FirstName;

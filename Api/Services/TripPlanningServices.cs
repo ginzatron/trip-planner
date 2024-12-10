@@ -1,4 +1,3 @@
-using Api.CustomExceptions;
 using Api.DbContexts;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +21,9 @@ public class TripPlanningService : ITripPlanningService
 
         return await query.ToListAsync();
     }
-    public async Task<TripDetails> GetByIdAsync(int id)
+    public async Task<TripDetails?> GetByIdAsync(int id)
     {
         var trip = await _context.TripDetails.FindAsync(id);
-        if (trip == null)
-        {
-            throw new NotFoundException("Trip not found");
-        }
-
         return trip;
     }
     public async Task<TripDetails> AddAsync(int userId, CreateTripRequest entity)
@@ -49,12 +43,12 @@ public class TripPlanningService : ITripPlanningService
         await _context.SaveChangesAsync();
         return trip;
     }
-    public async Task<TripDetails> UpdateAsync(UpdateTripRequest entity)
+    public async Task<TripDetails?> UpdateAsync(UpdateTripRequest entity)
     {
         var existingTrip = await _context.TripDetails.FindAsync(entity.Id);
         if (existingTrip == null)
         {
-            throw new NotFoundException("Trip not found");
+            return existingTrip;
         }
 
         existingTrip.TripName = entity.TripName;

@@ -25,7 +25,7 @@ public class TripController : ControllerBase
     public async Task<IActionResult> GetTrip(int id)
     {
         var trip = await _tripPlanningService.GetByIdAsync(id);
-        return Ok(trip);
+        return trip != null ? Ok(trip) : NotFound("Trip not found");
     }
 
     [HttpPost]
@@ -44,7 +44,7 @@ public class TripController : ControllerBase
         }
 
         var updatedTrip = await _tripPlanningService.UpdateAsync(trip);
-        return Ok(updatedTrip);
+        return updatedTrip != null ? Ok(updatedTrip) : NotFound("Trip not found");
     }
 
     [HttpDelete("{id}")]

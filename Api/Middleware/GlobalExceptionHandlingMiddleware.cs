@@ -1,6 +1,4 @@
-﻿using Api.CustomExceptions;
-
-namespace Api.Middleware;
+﻿namespace Api.Middleware;
 
 public class GlobalExceptionHandlingMiddleware
 {
@@ -18,16 +16,6 @@ public class GlobalExceptionHandlingMiddleware
         try
         {
             await _next(context);
-        }
-        catch (NotFoundException ex)
-        {
-            _logger.LogWarning(ex, "Not Found Exception");
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            await context.Response.WriteAsJsonAsync(new
-            {
-                Message = ex.Message,
-                Code = "NOT_FOUND"
-            });
         }
         catch (BadHttpRequestException ex)
         {
