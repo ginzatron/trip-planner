@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         return Ok(newUser);
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest user)
     {
         if (id != user.Id)

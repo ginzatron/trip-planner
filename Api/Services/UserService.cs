@@ -43,8 +43,8 @@ public class UserService : IUserService
             return existingUser;
         }
 
-        existingUser.FirstName = entity.FirstName;
-        existingUser.LastName = entity.LastName;
+        existingUser.FirstName = entity.FirstName ?? existingUser.FirstName;
+        existingUser.LastName = entity.LastName ?? existingUser.LastName;
         existingUser.UpdatedOn = DateTime.Now;
 
         await _context.SaveChangesAsync();

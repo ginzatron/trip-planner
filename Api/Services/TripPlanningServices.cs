@@ -57,10 +57,10 @@ public class TripPlanningService : ITripPlanningService
             return existingTrip;
         }
 
-        existingTrip.TripName = entity.TripName;
-        existingTrip.TripDesignation = entity.TripDesignation;
-        existingTrip.StartDate = entity.StartDate;
-        existingTrip.EndDate = entity.EndDate;
+        existingTrip.TripName = entity.TripName ?? existingTrip.TripName;
+        existingTrip.TripDesignation = entity.TripDesignation ?? existingTrip.TripDesignation;
+        existingTrip.StartDate = entity.StartDate ?? existingTrip.StartDate;
+        existingTrip.EndDate = entity.EndDate ?? existingTrip.EndDate;
         existingTrip.UpdatedOn = DateTime.Now;
 
         await _context.SaveChangesAsync();
