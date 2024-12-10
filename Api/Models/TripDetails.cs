@@ -1,4 +1,6 @@
-﻿namespace Api.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Api.Models;
 
 public class TripDetails
 {
@@ -10,30 +12,27 @@ public class TripDetails
     public DateTime EndDate { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime UpdatedOn { get; set; }
-    public int DaysUntilTrip()
+    public int DaysUntilTrip => TripStatus == TripStatus.Planned
+        ? (StartDate - DateTime.Now).Days 
+        : 0;
+    public int TripLengthInDays => (EndDate - StartDate).Days;
+
+    public int DaysRemainingInTrip => TripStatus == TripStatus.InProgress
+        ? (EndDate - DateTime.Now).Days 
+        : 0;
+
+    [NotMapped]
+    public TripStatus TripStatus
     {
-        if (DateTime.Now < StartDate)
+        get
         {
-            return (StartDate - DateTime.Now).Days;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    public int TripLengthInDays()
-    {
-        return (EndDate - StartDate).Days;
-    }
-    public int DaysRemainingInTrip()
-    {
-        if (DateTime.Now < EndDate)
-        {
-            return (EndDate - DateTime.Now).Days;
-        }
-        else
-        {
-            return 0;
+            var TripIsActive = DateTime.Now >= StartDate && DateTime.Now <= EndDate;
+            if (TripIsActive)
+                return TripStatus.InProgress;
+            else if (DateTime.Now > EndDate)
+                return TripStatus.Completed;
+            else
+                return TripStatus.Planned;
         }
     }
 }
@@ -43,4 +42,11 @@ public enum TripDesignation
     Personal,
     Business,
     Family
+}
+
+public enum TripStatus
+{
+    Planned,
+    InProgress,
+    Completed
 }

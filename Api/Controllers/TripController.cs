@@ -15,9 +15,9 @@ public class TripController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTrips(int userId, [FromQuery] TripDesignation? designation = null)
+    public async Task<IActionResult> GetTrips(int userId, [FromQuery] TripDesignation? designation = null, [FromQuery] TripStatus? status = null) 
     {
-        var trips = await _tripPlanningService.GetAllAsync(userId, designation);
+        var trips = await _tripPlanningService.GetAllAsync(userId, designation, status);
         return Ok(trips);
     }
 

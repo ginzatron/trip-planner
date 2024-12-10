@@ -17,5 +17,9 @@ public class TravelPlanningContext : DbContext
     {
         modelBuilder.Entity<TripDetails>()
             .HasIndex(t => t.UserId);
+
+        modelBuilder.Entity<TripDetails>()
+            .Property(e => e.TripDesignation)
+            .HasConversion<string>();
     }
 }

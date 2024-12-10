@@ -11,7 +11,7 @@ public class TripPlanningService : ITripPlanningService
     {
         _context = context;
     }
-    public async Task<IEnumerable<TripDetails>> GetAllAsync(int userId, TripDesignation? designation = null)
+    public async Task<IEnumerable<TripDetails>> GetAllAsync(int userId, TripDesignation? designation = null, TripStatus? status = null)
     {
         var query = _context.TripDetails.Where(t => t.UserId == userId);
         if (designation != null)
@@ -19,7 +19,13 @@ public class TripPlanningService : ITripPlanningService
             query = query.Where(t => t.TripDesignation == designation);
         }
 
-        return await query.ToListAsync();
+        var results = await query.ToListAsync();
+        if (status != null)
+        {
+            results = results.Where(t => t.TripStatus == status).ToList();
+        }
+
+        return results;
     }
     public async Task<TripDetails?> GetByIdAsync(int id)
     {
